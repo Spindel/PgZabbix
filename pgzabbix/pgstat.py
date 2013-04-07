@@ -2,23 +2,6 @@
 from sqlalchemy import engine
 from time import sleep, time
 
-config = configparser.ConfigParser()
-
-config['DEFAULT'] = { 'Interval': '120',
-                      'Hostname': 'localhost',
-                      'Port':'',
-                      'Username': 'root',
-                      'Password': '',
-                      'DBName' : 'postgres'
-    }
-
-config.read('pgstat.ini')
-engines = []
-connections = []
-
-if not config.sections():
-    print("No sections in pgstat.ini. Exiting")
-    exit(1)
 
 
 def create_engine_from_config(config):
@@ -34,17 +17,17 @@ def create_engine_from_config(config):
     return (config['Hostname'], eng)
 
 
-for DB in config.sections():
+#for DB in config.sections():
 
-    engines.append(create_engine_from_config(config[DB]))
+ #   engines.append(create_engine_from_config(config[DB]))
+#
+#    Default = config.getint('DEFAULT', 'Interval')
+#    local = config.getint(DB, 'Interval')
+#
+#    sleeptime  = (Default,local)[local  < Default]
 
-    Default = config.getint('DEFAULT', 'Interval')
-    local = config.getint(DB, 'Interval')
 
-    sleeptime  = (Default,local)[local  < Default]
-
-
-print("sleeping for %s" % sleeptime )
+# print("sleeping for %s" % sleeptime )
 
 statistics = ('numbackends',
               'tup_returned',
@@ -109,7 +92,7 @@ def push_to_zabbix(result):
     pprint.pprint(result)
     return
 
-
+"""
 result = []
 while True:
     for (hostname,engine) in engines:
@@ -132,4 +115,4 @@ while True:
     print("Resting now")
     sleep(sleeptime)
 
-
+"""
