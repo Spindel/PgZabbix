@@ -3,6 +3,49 @@ from sqlalchemy import engine
 from time import sleep, time
 
 
+class Zabbix_connection:
+    def __init__(self,Hostname='zabbix', Port=10050, Interval=120):
+        self.Hostname = Hostname
+        self.Port = Port
+        self.Interval = Interval
+        self.result = []
+
+    def __str__(self):
+        s = '%s:%i, %i' % (self.Hostname, self.Port, self.Interval)
+        return s
+
+
+
+
+
+class Static:
+    """ Static keys that we want to grab from the DB"""
+    statistics = ('numbackends',
+                  'tup_returned',
+                  'tup_fetched',
+                  'tup_inserted',
+                  'tup_updated',
+                  'tup_deleted',
+                  'xact_commit',
+                  'xact_rollback')
+
+    locks = ('ExclusiveLock',
+             'AccessExclusiveLock',
+             'AccessShareLock',
+             'RowShareLock',
+             'RowExclusiveLock',
+             'ShareUpdateExclusiveLock',
+             'ShareRowExclusiveLock')
+
+
+    checkpoints = ( 'checkpoints_timed',
+                    'checkpoints_req',
+                    'buffers_checkpoint',
+                    'buffers_clean',
+                    'maxwritten_clean',
+                    'buffers_backend',
+                    'buffers_alloc')
+
 
 def create_engine_from_config(config):
     """
@@ -17,67 +60,43 @@ def create_engine_from_config(config):
     return (config['Hostname'], eng)
 
 
-#for DB in config.sections():
+def statistics(connection):
+    def get_stat(connection, column):
+        """ Takes a stats column, summarizes it to get a total for this DB, and
+            returns it.  """
+        val = connection.execute('SELECT SUM(%s) FROM pg_stat_database' %
+                                        column).first()
+        ret = int(val[0])
+        return ret
 
- #   engines.append(create_engine_from_config(config[DB]))
-#
-#    Default = config.getint('DEFAULT', 'Interval')
-#    local = config.getint(DB, 'Interval')
-#
-#    sleeptime  = (Default,local)[local  < Default]
+    for stat in Static.statistics:
+        yield (stat, get_stat(connection, stat))
 
-
-# print("sleeping for %s" % sleeptime )
-
-statistics = ('numbackends',
-              'tup_returned',
-              'tup_fetched',
-              'tup_inserted',
-              'tup_updated',
-              'tup_deleted',
-              'xact_commit',
-              'xact_rollback')
-
-locks = ('ExclusiveLock',
-         'AccessExclusiveLock',
-         'AccessShareLock',
-         'RowShareLock',
-         'RowExclusiveLock',
-         'ShareUpdateExclusiveLock',
-         'ShareRowExclusiveLock')
-
-
-checkpoints = ( 'checkpoints_timed',
-                'checkpoints_req',
-                'buffers_checkpoint',
-                'buffers_clean',
-                'maxwritten_clean',
-                'buffers_backend',
-                'buffers_alloc')
-
-def get_stat(connection, column):
+def locks(connection):
+    """ Takes a connection, yields tuples of:
+        mode, value
     """
-        Takes a stats column, summarizes it to get a total for this DB, and
-        returns it.
-    """
-    val = connection.execute('SELECT SUM(%s) FROM pg_stat_database' %
-                                    column).first()
-    ret = int(val[0])
-    return ret
+    def get_lock(connection, mode):
+        """ Return lock modes """
+        val = connection.execute("SELECT COUNT(*) from pg_locks WHERE mode='%s'" %
+                                 mode).first()
+        return int(val[0])
 
-def get_lock(connection, mode):
-    """ Return lock modes
-    """
-    val = connection.execute("SELECT COUNT(*) from pg_locks WHERE mode='%s'" %
-                             mode).first()
-    return int(val[0])
+    for lock in Static.locks:
+        yield (lock, get_lock(connection, lock))
 
 
-def get_checkpoint(connection, checkpoint):
-    """ Return lock modes
-    """
-    val = connection.execute("SELECT %s FROM pg_stat_bgwriter" % checkpoint).first()
-    return int(val[0])
+
+
+def checkpoints(connection):
+    """ Takes a connection, returns tuples of ("name", value) """
+    def get_checkpoint(connection, checkpoint):
+        """ Return checkpoint numbers  """
+        val = connection.execute("SELECT %s FROM pg_stat_bgwriter" % checkpoint).first()
+        return int(val[0])
+
+    for checkpoint in Static.checkpoints:
+        yield ( checkpoint, get_checkpoint(connection, checkpoint))
 
 
 def push_to_zabbix(result):
@@ -92,27 +111,3 @@ def push_to_zabbix(result):
     pprint.pprint(result)
     return
 
-"""
-result = []
-while True:
-    for (hostname,engine) in engines:
-        timestamp = int(time())
-        with engine.begin() as conn:
-            for stat in statistics:
-                tupl = ( hostname, 'postgres.' + stat, timestamp,
-                        get_stat(conn, stat))
-                result.append(tupl)
-
-            for lock in locks:
-                tupl = ( hostname, 'postgres.' + lock, timestamp,
-                        get_lock(conn, lock))
-                result.append(tupl)
-            for checkpoint in checkpoints:
-                tupl = (hostname, 'postgres.' + checkpoint, timestamp,
-                        get_checkpoint(conn, checkpoint))
-                result.append(tupl)
-    push_to_zabbix(result)
-    print("Resting now")
-    sleep(sleeptime)
-
-"""

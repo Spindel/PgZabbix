@@ -2,8 +2,10 @@
 # vim: set nobomb:
 
 import configparser
+import zbxsend
 from pgzabbix import pgstat
 from time import time, sleep
+
 
 INIFILE='pgzabbix.ini'
 engines = []
@@ -20,16 +22,6 @@ config['DEFAULT'] = { 'Interval': '120',
                       'DBName' : 'postgres'
     }
 
-class Zabbix_connection:
-    def __init__(self,Hostname='zabbix', Port=10050, Interval=120):
-        self.Hostname = Hostname
-        self.Port = Port
-        self.Interval = Interval
-
-    def __str__(self):
-        s = '%s:%i, %i' % (self.Hostname, self.Port, self.Interval)
-        return s
-
 
 config.read(INIFILE)
 
@@ -41,36 +33,38 @@ if not 'Zabbix' in config.sections():
      print("Warning: no Zabbix section in %s" % (INIFILE))
 
 
-zabbix = Zabbix_connection(
+zabbix = pgstat.Zabbix_connection(
         Hostname=config['Zabbix']['Hostname'],
         Port=int(config['Zabbix']['Port']),
         Interval=int(config['Zabbix']['Interval']))
 
-
-
 for DB in config.sections():
     if 'Zabbix' not in DB:
         engines.append(pgstat.create_engine_from_config(config[DB]))
+
+if not engines:
+    print("No database definitions found, please add one to %s" % INIFILE)
+    exit(1)
+
 
 result = []
 while True:
     for (hostname,engine) in engines:
         timestamp = int(time())
         with engine.begin() as conn:
-            for stat in pgstat.statistics:
-                tupl = ( hostname, 'postgres.' + stat, timestamp,
-                        pgstat.get_stat(conn, stat))
-                result.append(tupl)
+            for stat in pgstat.statistics(conn):
+                val = zbxsend.Metric(hostname, 'postgres.' + stat[0], stat[1], timestamp)
+                result.append(val)
 
-            for lock in pgstat.locks:
-                tupl = ( hostname, 'postgres.' + lock, timestamp,
-                        pgstat.get_lock(conn, lock))
-                result.append(tupl)
-            for checkpoint in pgstat.checkpoints:
-                tupl = (hostname, 'postgres.' + checkpoint, timestamp,
-                        pgstat.get_checkpoint(conn, checkpoint))
-                result.append(tupl)
-    pgstat.push_to_zabbix(result)
+            for lock in pgstat.locks(conn):
+                val = zbxsend.Metric(hostname, 'postgres.' + lock[0], lock[1], timestamp)
+                result.append(val)
+
+            for checkpoint in pgstat.checkpoints(conn):
+                val = zbxsend.Metric(hostname, 'postgres.' + checkpoint[0], checkpoint[1], timestamp)
+                result.append(val)
+
+    zbxsend.send_to_zabbix(result, zabbix.Hostname, zabbix.Port)
     print("Resting now")
     sleep(zabbix.Interval)
 
