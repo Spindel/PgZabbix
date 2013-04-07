@@ -41,7 +41,7 @@ for DB in config.sections():
     Default = config.getint('DEFAULT', 'Interval')
     local = config.getint(DB, 'Interval')
 
-    sleeptime  = (local,Default)[local  < Default]
+    sleeptime  = (Default,local)[local  < Default]
 
 
 print("sleeping for %s" % sleeptime )
