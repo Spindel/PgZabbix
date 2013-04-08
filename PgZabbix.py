@@ -2,7 +2,6 @@
 # vim: set nobomb:
 
 import configparser
-import zbxsend
 from pgzabbix import pgstat
 from time import time, sleep
 
@@ -30,7 +29,12 @@ if not config.sections():
     exit(1)
 
 if not 'Zabbix' in config.sections():
-     print("Warning: no Zabbix section in %s" % (INIFILE))
+     print("""Warning: no Zabbix section in %s.
+[Zabbix]
+Hostname=proxy.internal.zabbix.server
+Port=10050
+Interval=60""" % (INIFILE))
+     exit(1)
 
 
 zabbix = pgstat.Zabbix_connection(
