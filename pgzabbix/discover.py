@@ -10,19 +10,18 @@ def sr_discovery(cur):
     row = cur.fetchone()
     res = row[0]
     if res:
-        yield {"#MODE": "streaming"}
-
+        yield {"{#MODE}": "streaming"}
 
 def sr_discovery_ip(cur):
     cur.execute("SELECT client_addr from pg_stat_replication;")
     for row in cur.fetchall():
-        yield {"#SRCLIENT": row[0]}
+        yield {"{#SRCLIENT}": row[0]}
 
 
 # UserParameter=db.list.discovery[*],"$1"/find_dbname.sh "$2"
 def db_discovery(cur):
     for database in list_databases(cur):
-        yield {"#DBNAME": database}
+        yield {"{#DBNAME}": database}
 
 
 def tables_discovery(cur):
@@ -30,11 +29,9 @@ def tables_discovery(cur):
                 " from pg_tables "
                 " where schemaname not in ('pg_catalog','information_schema')")
     for row in cur.fetchall():
-        obj = {}
-        obj["#DBNAME"] = row[0]
-        obj["#SCHEMANAME"] = row[1]
-        obj["#TABLENAME"] = row[2]
-        yield obj
+        yield {"{#DBNAME}" : row[0],
+               "{#SCHEMANAME}": row[1],
+               "{#TABLENAME}": row[2]}
 
 
 """

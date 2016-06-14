@@ -42,8 +42,9 @@ def commandline():
     group.add_argument('--read',     action='store_true', default=False)
     group.add_argument('--tables',   action='store_true', default=False)
     group.add_argument('--discover', action='store_true', default=False)
-    group.add_argument('--discover_sr', action='store_true', default=False)
     group.add_argument('--discover_tables', action='store_true', default=False)
+    group.add_argument('--discover_db', action='store_true', default=False)
+    group.add_argument('--discover_sr', action='store_true', default=False)
     args = parser.parse_args()
     return args
 
@@ -62,7 +63,7 @@ def main():
     if args.tables:
         pgzabbix.tables_stat(config)
 
-    if args.discover:
+    if args.discover_db:
         pgzabbix.discover_db(cur)
 
     if args.discover_sr:
@@ -70,6 +71,9 @@ def main():
 
     if args.discover_tables:
         pgzabbix.discover_tables(config)
+
+    if args.discover:
+        pgzabbix.discover_all(config, cur)
 
     cur.close()
     conn.close()

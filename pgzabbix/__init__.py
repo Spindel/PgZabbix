@@ -6,7 +6,6 @@ import pgzabbix.replication
 import pgzabbix.table
 import psycopg2
 
-
 def all_generic(cur):
     for fun in (
         pgzabbix.generic.psql_running,
@@ -29,7 +28,7 @@ def all_generic(cur):
         pgzabbix.generic.psql_slow_dml_queries,
         pgzabbix.generic.psql_slow_queries,
         pgzabbix.generic.psql_slow_select_queries,
-        pgzabbix.generic.psql_tx_committed,
+        pgzabbix.generic.psql_tx_commited,
         pgzabbix.generic.psql_tx_rolledback,
     ):
         for key, val in fun(cur):
@@ -45,7 +44,7 @@ def all_perdb(cur):
         pgzabbix.database.confl_snapshot,
         pgzabbix.database.confl_bufferpin,
         pgzabbix.database.confl_deadlock,
-        pgzabbix.database.db_tx_committed,
+        pgzabbix.database.db_tx_commited,
         pgzabbix.database.db_deadlocks,
         pgzabbix.database.db_tx_rolledback,
         pgzabbix.database.db_temp_bytes,
@@ -99,18 +98,20 @@ def current_tables(cur):
 def to_zbx(thelist):
     obj = {}
     obj["data"] = list(thelist)
-    print(json.dumps(obj, indent=4))
+    return json.dumps(obj)
 
 
 def discover_sr(cur):
     data = list(pgzabbix.discover.sr_discovery(cur))
     data2 = list(pgzabbix.discover.sr_discovery_ip(cur))
-    to_zbx(data + data2)
+    data = to_zbx(data + data2)
+    print(" - {0} {1}".format("psql.sr.discovery", data))
 
 
 def discover_db(cur):
     data = pgzabbix.discover.db_discovery(cur)
-    to_zbx(data)
+    data = to_zbx(data)
+    print(" - {0} {1}".format("psql.discovery", data))
 
 
 def list_databases_we_can_connect_to_and_fuck_off(cur):
@@ -153,4 +154,11 @@ def discover_tables(config):
     Pay close attention to the fact that it doesn't take a connection, but
     takes a configuration for connection options"""
     data = list(foreach_db(config, pgzabbix.discover.tables_discovery))
-    to_zbx(data)
+    data = to_zbx(data)
+    print(" - {0} {1}".format("psql.table.discovery", data))
+
+
+def discover_all(config, cur):
+    discover_sr(cur)
+    discover_db(cur)
+    discover_tables(config)

@@ -25,12 +25,15 @@ Todo:
 
 
 HOWTO:
-    Use your configuration management system to push UserParameters for discovery
     Use your configuration management system to push the PgZabbix tool (or install via pip)
-    Use your configuration management system to set up two cron jobs, one for
-    tables, one for databases, and pipe them to zabbix_sender
+    Use your configuration management system to set up cron jobs:
+        1/hour for discovery
+        */minute or 5 minutes for logging
+    then pipe it to zabbix_sender:
 
-    $ PgZabbix --tables | zabbix_sender -c /etc/zabbix/zabbix_agent.conf  -i - 
+    # createuser  -e --no-replication  pgzabbix
+    $ PgZabbix --tables | zabbix_sender -c /etc/zabbix/zabbix_agent.conf  -i -
+    If you use HostnameItem instead of Hostname, add -s $(hostname --long)
 
 LICENCE:
     Very inspired by pg_monz ( https://github.com/pg-monz/pg_monz ) but I
@@ -40,3 +43,10 @@ LICENCE:
     So I rewrote it.
 
     As a bonus, "table$({echo,hello,world])hi"  should work
+
+
+Building:
+    make sure you've got psycopg2 from your package manager
+    ` python setup.py bdist --formats=zip` and then deploy the zip file, run it
+    with `python zipfile.zip`
+

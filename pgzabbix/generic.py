@@ -17,10 +17,10 @@ def psql_running(cur):
         yield ("psql.running", row[0])
 
 
-def psql_tx_committed(cur):
+def psql_tx_commited(cur):
     cur.execute("select sum(xact_commit) from pg_stat_database")
     for row in cur.fetchall():
-        yield ("psql.tx_committed", row[0])
+        yield ("psql.tx_commited", row[0])
 
 
 def psql_tx_rolledback(cur):

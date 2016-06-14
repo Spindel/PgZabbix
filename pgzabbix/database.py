@@ -67,12 +67,12 @@ def confl_deadlock(cur):
         yield ('psql.confl_deadlock[{}]'.format(row[0]), row[1])
 
 
-def db_tx_committed(cur):
+def db_tx_commited(cur):
     cur.execute("select datname, xact_commit from pg_stat_database"
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_tx_committed[{}]'.format(row[0]), row[1])
+        yield ('psql.db_tx_commited[{}]'.format(row[0]), row[1])
 
 
 def db_deadlocks(cur):
