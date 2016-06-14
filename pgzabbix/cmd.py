@@ -62,7 +62,6 @@ def main():
     if args.tables:
         pgzabbix.tables_stat(config)
 
-
     if args.discover:
         pgzabbix.discover_db(cur)
 

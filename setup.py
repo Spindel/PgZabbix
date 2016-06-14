@@ -10,6 +10,6 @@ setup(name="pgzabbix",
       packages=["pgzabbix"],
       install_requires=["psycopg2"],
       entry_points={
-          "console_scripts":["PgZabbix=pgzabbix.cmd:main"],
+          "console_scripts": ["PgZabbix=pgzabbix.cmd:main"],
       },
       zip_safe=True)
