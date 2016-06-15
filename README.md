@@ -31,7 +31,12 @@ HOWTO:
         */minute or 5 minutes for logging
     then pipe it to zabbix_sender:
 
+    # as postgres superuser:
     # createuser  -e --no-replication  pgzabbix
+    run the provided pgzabbix.sql file to create a pg_stat_replic view that
+    can be used. Modify the GRANT line if you chose another username
+    # psql -d postgres -f pgzabbix.sql
+
     $ PgZabbix --tables | zabbix_sender -c /etc/zabbix/zabbix_agent.conf  -i -
     If you use HostnameItem instead of Hostname, add -s $(hostname --long)
 

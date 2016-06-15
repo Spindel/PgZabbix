@@ -6,6 +6,7 @@ import pgzabbix.replication
 import pgzabbix.table
 import psycopg2
 
+
 def all_generic(cur):
     for fun in (
         pgzabbix.generic.psql_running,
@@ -102,9 +103,8 @@ def to_zbx(thelist):
 
 
 def discover_sr(cur):
-    data = list(pgzabbix.discover.sr_discovery(cur))
-    data2 = list(pgzabbix.discover.sr_discovery_ip(cur))
-    data = to_zbx(data + data2)
+    data = list(pgzabbix.replication.sr_discovery(cur))
+    data = to_zbx(data)
     print(" - {0} {1}".format("psql.sr.discovery", data))
 
 

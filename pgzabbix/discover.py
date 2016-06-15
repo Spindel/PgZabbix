@@ -4,20 +4,6 @@ def list_databases(cur):
         yield row[0]
 
 
-# UserParameter=sr.discovery[*],"$1"/find_sr.sh "$2"
-def sr_discovery(cur):
-    cur.execute("SELECT count(*) from pg_stat_replication;")
-    row = cur.fetchone()
-    res = row[0]
-    if res:
-        yield {"{#MODE}": "streaming"}
-
-def sr_discovery_ip(cur):
-    cur.execute("SELECT client_addr from pg_stat_replication;")
-    for row in cur.fetchall():
-        yield {"{#SRCLIENT}": row[0]}
-
-
 # UserParameter=db.list.discovery[*],"$1"/find_dbname.sh "$2"
 def db_discovery(cur):
     for database in list_databases(cur):
@@ -29,9 +15,11 @@ def tables_discovery(cur):
                 " from pg_tables "
                 " where schemaname not in ('pg_catalog','information_schema')")
     for row in cur.fetchall():
-        yield {"{#DBNAME}" : row[0],
-               "{#SCHEMANAME}": row[1],
-               "{#TABLENAME}": row[2]}
+        yield {
+            "{#DBNAME}": row[0],
+            "{#SCHEMANAME}": row[1],
+            "{#TABLENAME}": row[2],
+        }
 
 
 """
