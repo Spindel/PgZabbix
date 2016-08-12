@@ -126,6 +126,8 @@ def psql_table_heap_cachehit_ratio(cur):
     out = "psql.table_heap_cachehit_ratio[{},{},{}]"
     cur.execute(query)
     for row in cur.fetchall():
+        if row[3] is None:
+            continue
         yield out.format(*row[:3]), row[3]
 
 
