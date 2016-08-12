@@ -156,13 +156,11 @@ def discover_tables(config):
     """ This function is _special_ in the not quite retarded sense
     Pay close attention to the fact that it doesn't take a connection, but
     takes a configuration for connection options"""
-    
-    
     # Note that zabbix is sometimes retarded and truncates long messages
     # then complains about invalid (truncated) json
-    for perdb in foreach_db(config, pgzabbix.discover.tables_discovery):
-        data = to_zbx([perdb])
-        print(" - {0} {1}".format("psql.table.discovery", data))
+    data = list(foreach_db(config, pgzabbix.discover.tables_discovery))
+    data = to_zbx(data)
+    print(" - {0} {1}".format("psql.table.discovery", data))
 
 
 def discover_all(config, cur):
