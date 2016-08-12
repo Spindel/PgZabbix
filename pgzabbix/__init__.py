@@ -99,7 +99,10 @@ def current_tables(cur):
 def to_zbx(thelist):
     obj = {}
     obj["data"] = list(thelist)
-    return json.dumps(obj)
+
+    # Zabbix implementation of json is sensitive to whitespace,
+    # so no whitespace separation is easiest way to please it.
+    return json.dumps(obj, separators=(",", ":"))
 
 
 def discover_sr(cur):
@@ -153,9 +156,13 @@ def discover_tables(config):
     """ This function is _special_ in the not quite retarded sense
     Pay close attention to the fact that it doesn't take a connection, but
     takes a configuration for connection options"""
-    data = list(foreach_db(config, pgzabbix.discover.tables_discovery))
-    data = to_zbx(data)
-    print(" - {0} {1}".format("psql.table.discovery", data))
+    
+    
+    # Note that zabbix is sometimes retarded and truncates long messages
+    # then complains about invalid (truncated) json
+    for perdb in foreach_db(config, pgzabbix.discover.tables_discovery):
+        data = to_zbx([perdb])
+        print(" - {0} {1}".format("psql.table.discovery", data))
 
 
 def discover_all(config, cur):

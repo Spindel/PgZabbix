@@ -25,11 +25,9 @@ def tables_discovery(cur):
 """
      <key>proc.num[postgres,,,wal receiver]</key>
      <key>proc.num[postgres,,,wal sender]</key>
-
-       <key>pgsql.get.pg.sr.status[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR},{HOST.HOST},{$ZABBIX_AGENTD_CONF}]</key>
-       <key>sr.db.list.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
-       <key>sr.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
-       <key>pgsql.get.pg.stat_replication[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR},{HOST.HOST},{$ZABBIX_AGENTD_CONF},{#MODE}]</key>
-        <key>sr.status.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
-
+     <key>pgsql.get.pg.sr.status[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR},{HOST.HOST},{$ZABBIX_AGENTD_CONF}]</key>
+     <key>sr.db.list.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
+     <key>sr.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
+     <key>pgsql.get.pg.stat_replication[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR},{HOST.HOST},{$ZABBIX_AGENTD_CONF},{#MODE}]</key>
+     <key>sr.status.discovery[{$PGSCRIPTDIR},{$PGSCRIPT_CONFDIR}]</key>
 """
