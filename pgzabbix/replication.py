@@ -42,7 +42,9 @@ def sr_discovery(cur):
     query = ("SELECT client_addr, state from {table};")
     cur.execute(query.format(table=view_select(cur)))
     for row in cur.fetchall():
-        yield {
-            "{#SRCLIENT}": row[0],
-            "{#MODE}": row[1],
-        }
+        # pg_basebackup has no client_addr set when streaming
+        if row[0]:
+            yield {
+                "{#SRCLIENT}": row[0],
+                "{#MODE}": row[1],
+            }
