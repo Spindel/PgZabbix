@@ -11,7 +11,7 @@ class custom_bdist_dumb(bdist_dumb):
 
 if __name__ == '__main__':
     setup(name="pgzabbix",
-          version="1.3",
+          version="1.4",
           description="Send stats about postgres to Zabbix",
           url="https://github.com/Spindel/PgZabbix",
           author="D.S. Ljungmark",
