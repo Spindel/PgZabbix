@@ -1,0 +1,7 @@
+[Unit]
+Description=pgZabbix stat reader
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+

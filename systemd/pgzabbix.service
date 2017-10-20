@@ -1,0 +1,9 @@
+[Unit]
+Description=pgZabbix stats
+
+[Service]
+Type=oneshot
+User=pgzabbix
+Group=pgzabbix
+ExecStart=/usr/local/bin/pgzabbix --read
+ExecStart=/usr/local/bin/pgzabbix --tables

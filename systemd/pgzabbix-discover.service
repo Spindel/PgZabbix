@@ -1,0 +1,11 @@
+[Unit]
+Description=pgZabbix discovery
+
+[Service]
+Type=oneshot
+
+User=pgzabbix
+Group=pgzabbix
+ExecStart=/usr/local/bin/pgzabbix --discover
+ExecStart=/usr/local/bin/pgzabbix --discover_db
+ExecStart=/usr/local/bin/pgzabbix --discover_sr

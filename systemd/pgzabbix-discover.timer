@@ -1,0 +1,7 @@
+[Unit]
+Description=pgZabbix discovery
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+
