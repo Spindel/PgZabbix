@@ -54,7 +54,8 @@ def psql_idle_tx_connections(cur):
 
 
 def psql_locks_waiting(cur):
-    cur.execute("select count(*) from pg_stat_activity where waiting = 'true'")
+    cur.execute("select count(*) from pg_stat_activity where "
+                " wait_event is not NULL and state = 'active'")
     for row in cur.fetchall():
         yield ("psql.locks_waiting", row[0])
 

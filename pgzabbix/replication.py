@@ -10,7 +10,7 @@ def view_select(cur):
 
 def write_diff(cur):
     query = ("SELECT host(client_addr), "
-             " pg_xlog_location_diff(sent_location, write_location) "
+             "  pg_wal_lsn_diff(sent_lsn, write_lsn) "
              " from {table}")
 
     cur.execute(query.format(table=view_select(cur)))
@@ -20,7 +20,7 @@ def write_diff(cur):
 
 def replay_diff(cur):
     query = ("SELECT host(client_addr), "
-             " pg_xlog_location_diff(sent_location, replay_location) "
+             "  pg_wal_lsn_diff(sent_lsn, replay_lsn) "
              " from {table}")
 
     cur.execute(query.format(table=view_select(cur)))
