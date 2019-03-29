@@ -54,7 +54,13 @@ def psql_idle_tx_connections(cur):
 
 
 def psql_locks_waiting(cur):
-    cur.execute("select count(*) from pg_stat_activity where waiting = 'true'")
+    vers = cur.connection.server_version
+    if vers <  90600:
+        query = "select count(*) from pg_stat_activity where waiting = 'true'"
+    else:
+        query = "select count(*) from pg_stat_activity where wait_event_type in ('Lock', 'LWLock')"
+
+    cur.execute(query)
     for row in cur.fetchall():
         yield ("psql.locks_waiting", row[0])
 
