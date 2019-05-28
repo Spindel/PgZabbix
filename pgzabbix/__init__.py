@@ -118,11 +118,11 @@ def discover_db(cur):
 
 
 def list_databases_we_can_connect_to_and_fuck_off(cur):
-        query = ("select datname, pg_database_size(datname) from pg_database "
-                 " where datistemplate = 'f' and "
-                 " has_database_privilege(datname, 'CONNECT')")
-        cur.execute(query)
-        return [x[0] for x in cur]
+    query = ("select datname, pg_database_size(datname) from pg_database "
+             " where datistemplate = 'f' and "
+             " has_database_privilege(datname, 'CONNECT')")
+    cur.execute(query)
+    return [x[0] for x in cur]
 
 
 def foreach_db(config, perdb_function):

@@ -55,3 +55,15 @@ Building:
     ` python setup.py bdist --formats=zip` and then deploy the zip file, run it
     with `python zipfile.zip`
 
+
+Hacking
+    Running ancient postgres in production and want to test it?
+    $ podman run --rm=true  -p 5432 -ti centos:6
+    $ rpm -ivh https://download.postgresql.org/pub/repos/yum/9.1/redhat/rhel-6-x86_64/pgdg-centos91-9.1-6.noarch.rpm
+    $ yum install postgresql91-server  postgresql91
+    $ su - postgres
+    $ /usr/pgsql-9.1/bin/initdb /var/lib/pgsql/9.1/data/
+    $ edit postgresql.conf, add listen = "*"
+    $ edit pg_hba.conf, add connect / trust  
+
+    $ /usr/pgsql-9.1/bin/postgres -D /var/lib/pgsql/9.1/data

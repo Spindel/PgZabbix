@@ -76,6 +76,10 @@ def db_tx_commited(cur):
 
 
 def db_deadlocks(cur):
+    vers = cur.connection.server_version
+    if vers <= 90125:
+        # Old postgresql version
+        return
     cur.execute("select datname, deadlocks from pg_stat_database"
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
@@ -93,6 +97,10 @@ def db_tx_rolledback(cur):
 
 
 def db_temp_bytes(cur):
+    vers = cur.connection.server_version
+    if vers <= 90125:
+        # Old postgresql version
+        return
     cur.execute("select datname, temp_bytes from pg_stat_database"
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")

@@ -39,8 +39,8 @@ def commandline():
                         default='/etc/pgzabbix.ini'
                         )
     group = parser.add_mutually_exclusive_group(required=False)
-    group.add_argument('--read',     action='store_true', default=False)
-    group.add_argument('--tables',   action='store_true', default=False)
+    group.add_argument('--read', action='store_true', default=False)
+    group.add_argument('--tables', action='store_true', default=False)
     group.add_argument('--discover', action='store_true', default=False)
     group.add_argument('--discover_tables', action='store_true', default=False)
     group.add_argument('--discover_db', action='store_true', default=False)
@@ -77,6 +77,7 @@ def main():
 
     cur.close()
     conn.close()
+
 
 if __name__ == "__main__":
     main()
