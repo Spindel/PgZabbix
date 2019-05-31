@@ -6,7 +6,6 @@ import pgzabbix.replication
 import pgzabbix.table
 import psycopg2
 
-
 def all_generic(cur):
     for fun in (
         pgzabbix.generic.psql_running,
@@ -33,7 +32,7 @@ def all_generic(cur):
         pgzabbix.generic.psql_tx_rolledback,
     ):
         for key, val in fun(cur):
-            print("- {0} {1}".format(key, val))
+            print("- %s %s" % (key, val))
 
 
 def all_perdb(cur):
@@ -58,7 +57,7 @@ def all_perdb(cur):
         pgzabbix.database.db_cachehit_ratio,
     ):
         for key, val in fun(cur):
-            print("- {0} {1}".format(key, val))
+            print("- %s %s" % (key, val))
 
 
 def all_sr(cur):
@@ -68,7 +67,7 @@ def all_sr(cur):
         pgzabbix.replication.sync_priority,
     ):
         for key, val in fun(cur):
-            print("- {0} {1}".format(key, val))
+            print("- %s %s" % (key, val))
 
 
 def current_tables(cur):
@@ -108,13 +107,13 @@ def to_zbx(thelist):
 def discover_sr(cur):
     data = list(pgzabbix.replication.sr_discovery(cur))
     data = to_zbx(data)
-    print(" - {0} {1}".format("psql.sr.discovery", data))
+    print(" - %s %s" % ("psql.sr.discovery", data))
 
 
 def discover_db(cur):
     data = pgzabbix.discover.db_discovery(cur)
     data = to_zbx(data)
-    print(" - {0} {1}".format("psql.discovery", data))
+    print(" - %s %s" % ("psql.discovery", data))
 
 
 def list_databases_we_can_connect_to_and_fuck_off(cur):
@@ -149,7 +148,7 @@ def foreach_db(config, perdb_function):
 
 def tables_stat(config):
     for key, val in foreach_db(config, current_tables):
-        print("- {0} {1}".format(key, val))
+        print("- %s %s" % (key, val))
 
 
 def discover_tables(config):
@@ -160,7 +159,7 @@ def discover_tables(config):
     # then complains about invalid (truncated) json
     data = list(foreach_db(config, pgzabbix.discover.tables_discovery))
     data = to_zbx(data)
-    print(" - {0} {1}".format("psql.table.discovery", data))
+    print(" - %s %s" % ("psql.table.discovery", data))
 
 
 def discover_all(config, cur):
