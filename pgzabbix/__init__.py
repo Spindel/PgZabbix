@@ -6,6 +6,7 @@ import pgzabbix.replication
 import pgzabbix.table
 import psycopg2
 
+
 def all_generic(cur):
     for fun in (
         pgzabbix.generic.psql_running,
