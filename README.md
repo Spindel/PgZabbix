@@ -67,3 +67,7 @@ Hacking
     $ edit pg_hba.conf, add connect / trust  
 
     $ /usr/pgsql-9.1/bin/postgres -D /var/lib/pgsql/9.1/data
+
+
+Compat:
+	Postgres 9.1  and up for now, more features in Pg10 and above
