@@ -85,12 +85,12 @@ def psql_slow_dml_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query not like '<IDLE>%'"
-            " and now() - query_start > '{} sec'::interval "
-            " and current_query ~* '^(insert|update|delete)'").format(limit)
+            " and now() - query_start > '%d sec'::interval "
+            " and current_query ~* '^(insert|update|delete)'") limit
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval "
-                 " and query ~* '^(insert|update|delete)'").format(limit)
+                 " and now() - query_start > '%d sec'::interval "
+                 " and query ~* '^(insert|update|delete)'") % limit
     cur.execute(query)
     for row in cur.fetchall():
         yield ("psql.slow_dml_queries", row[0])
@@ -101,10 +101,10 @@ def psql_slow_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query not like '<IDLE>%'"
-            " and now() - query_start > '{} sec'::interval").format(limit)
+            " and now() - query_start > '%d sec'::interval") % limit
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval").format(limit)
+                 " and now() - query_start > '%d sec'::interval") % limit
     cur.execute(query)
     for row in cur.fetchall():
         yield ("psql.slow_queries", row[0])
@@ -115,11 +115,11 @@ def psql_slow_select_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query ilike 'select%'"
-            " and now() - query_start > '{} sec'::interval").format(limit)
+            " and now() - query_start > '%d sec'::interval") % limit
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval "
-                 " and query ilike 'select%'").format(limit)
+                 " and now() - query_start > '%d sec'::interval "
+                 " and query ilike 'select%'") % limit
     cur.execute(query)
     for row in cur.fetchall():
         yield ("psql.slow_select_queries", row[0])
