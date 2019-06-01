@@ -24,7 +24,7 @@ def write_diff(cur):
 
     cur.execute(query.format(table=view_select(cur)))
     for row in cur.fetchall():
-        yield ('psql.write_diff[{}]'.format(row[0]), row[1])
+        yield ('psql.write_diff[{0}]'.format(row[0]), row[1])
 
 
 def replay_diff(cur):
@@ -43,7 +43,7 @@ def replay_diff(cur):
 
     cur.execute(query.format(table=view_select(cur)))
     for row in cur.fetchall():
-        yield ('psql.replay_diff[{}]'.format(row[0]), row[1])
+        yield ('psql.replay_diff[{0}]'.format(row[0]), row[1])
 
 
 def sync_priority(cur):
@@ -53,7 +53,7 @@ def sync_priority(cur):
 
     cur.execute(query.format(table=view_select(cur)))
     for row in cur.fetchall():
-        yield ('psql.sync_priority[{}]'.format(row[0]), row[1])
+        yield ('psql.sync_priority[{0}]'.format(row[0]), row[1])
 
 
 def sr_discovery(cur):

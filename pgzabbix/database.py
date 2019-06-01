@@ -15,7 +15,7 @@ def psql_db_size(cur):
              " has_database_privilege(datname, 'CONNECT')")
     cur.execute(query)
     for row in cur.fetchall():
-        yield ("psql.db_size[{}]".format(row[0]), row[1])
+        yield ("psql.db_size[{0}]".format(row[0]), row[1])
 
 
 def psql_db_garbage_ratio(cur):
@@ -23,7 +23,7 @@ def psql_db_garbage_ratio(cur):
 #    cur.execute("select datname, pg_database_size(datname) from pg_database "
 #                " where datistemplate = 'f'")
 #    for row in cur.fetchall():
-#        yield ("psql.db_size[{}]".format(row[0]), row[1])
+#        yield ("psql.db_size[{0}]".format(row[0]), row[1])
 
 
 def confl_tablespace(cur):
@@ -31,7 +31,7 @@ def confl_tablespace(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.confl_tablespace[{}]'.format(row[0]), row[1])
+        yield ('psql.confl_tablespace[{0}]'.format(row[0]), row[1])
 
 
 def confl_lock(cur):
@@ -39,7 +39,7 @@ def confl_lock(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.confl_lock[{}]'.format(row[0]), row[1])
+        yield ('psql.confl_lock[{0}]'.format(row[0]), row[1])
 
 
 def confl_snapshot(cur):
@@ -47,7 +47,7 @@ def confl_snapshot(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.confl_snapshot[{}]'.format(row[0]), row[1])
+        yield ('psql.confl_snapshot[{0}]'.format(row[0]), row[1])
 
 
 def confl_bufferpin(cur):
@@ -55,7 +55,7 @@ def confl_bufferpin(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.confl_bufferpin[{}]'.format(row[0]), row[1])
+        yield ('psql.confl_bufferpin[{0}]'.format(row[0]), row[1])
 
 
 def confl_deadlock(cur):
@@ -64,7 +64,7 @@ def confl_deadlock(cur):
                 " where pg_database.datistemplate=False;")
 
     for row in cur.fetchall():
-        yield ('psql.confl_deadlock[{}]'.format(row[0]), row[1])
+        yield ('psql.confl_deadlock[{0}]'.format(row[0]), row[1])
 
 
 def db_tx_commited(cur):
@@ -72,7 +72,7 @@ def db_tx_commited(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_tx_commited[{}]'.format(row[0]), row[1])
+        yield ('psql.db_tx_commited[{0}]'.format(row[0]), row[1])
 
 
 def db_deadlocks(cur):
@@ -85,7 +85,7 @@ def db_deadlocks(cur):
                 " where pg_database.datistemplate=False;")
 
     for row in cur.fetchall():
-        yield ('psql.db_deadlocks[{}]'.format(row[0]), row[1])
+        yield ('psql.db_deadlocks[{0}]'.format(row[0]), row[1])
 
 
 def db_tx_rolledback(cur):
@@ -93,7 +93,7 @@ def db_tx_rolledback(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_tx_rolledback[{}]'.format(row[0]), row[1])
+        yield ('psql.db_tx_rolledback[{0}]'.format(row[0]), row[1])
 
 
 def db_temp_bytes(cur):
@@ -105,7 +105,7 @@ def db_temp_bytes(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_temp_bytes[{}]'.format(row[0]), row[1])
+        yield ('psql.db_temp_bytes[{0}]'.format(row[0]), row[1])
 
 
 def db_deleted(cur):
@@ -113,7 +113,7 @@ def db_deleted(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_deleted[{}]'.format(row[0]), row[1])
+        yield ('psql.db_deleted[{0}]'.format(row[0]), row[1])
 
 
 def db_fetched(cur):
@@ -121,7 +121,7 @@ def db_fetched(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_fetched[{}]'.format(row[0]), row[1])
+        yield ('psql.db_fetched[{0}]'.format(row[0]), row[1])
 
 
 def db_inserted(cur):
@@ -129,7 +129,7 @@ def db_inserted(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_inserted[{}]'.format(row[0]), row[1])
+        yield ('psql.db_inserted[{0}]'.format(row[0]), row[1])
 
 
 def db_returned(cur):
@@ -137,7 +137,7 @@ def db_returned(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_returned[{}]'.format(row[0]), row[1])
+        yield ('psql.db_returned[{0}]'.format(row[0]), row[1])
 
 
 def db_updated(cur):
@@ -145,7 +145,7 @@ def db_updated(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_updated[{}]'.format(row[0]), row[1])
+        yield ('psql.db_updated[{0}]'.format(row[0]), row[1])
 
 
 def db_connections(cur):
@@ -153,7 +153,7 @@ def db_connections(cur):
                 " inner join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.db_connections[{}]'.format(row[0]), row[1])
+        yield ('psql.db_connections[{0}]'.format(row[0]), row[1])
 
 
 def db_cachehit_ratio(cur):
@@ -162,4 +162,4 @@ def db_cachehit_ratio(cur):
                 "  inner  join pg_database using (datname)"
                 " where pg_database.datistemplate=False;")
     for row in cur.fetchall():
-        yield ('psql.cachehit_ratio[{}]'.format(row[0]), row[1])
+        yield ('psql.cachehit_ratio[{0}]'.format(row[0]), row[1])

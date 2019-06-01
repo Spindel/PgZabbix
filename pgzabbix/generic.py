@@ -85,11 +85,11 @@ def psql_slow_dml_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query not like '<IDLE>%'"
-            " and now() - query_start > '{} sec'::interval "
+            " and now() - query_start > '{0} sec'::interval "
             " and current_query ~* '^(insert|update|delete)'").format(limit)
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval "
+                 " and now() - query_start > '{0} sec'::interval "
                  " and query ~* '^(insert|update|delete)'").format(limit)
     cur.execute(query)
     for row in cur.fetchall():
@@ -101,10 +101,10 @@ def psql_slow_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query not like '<IDLE>%'"
-            " and now() - query_start > '{} sec'::interval").format(limit)
+            " and now() - query_start > '{0} sec'::interval").format(limit)
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval").format(limit)
+                 " and now() - query_start > '{0} sec'::interval").format(limit)
     cur.execute(query)
     for row in cur.fetchall():
         yield ("psql.slow_queries", row[0])
@@ -115,10 +115,10 @@ def psql_slow_select_queries(cur, limit=123):
     if vers <= 90125:
         query = (
             "select count(*) from pg_stat_activity where current_query ilike 'select%'"
-            " and now() - query_start > '{} sec'::interval").format(limit)
+            " and now() - query_start > '{0} sec'::interval").format(limit)
     else:
         query = ("select count(*) from pg_stat_activity where state = 'active' "
-                 " and now() - query_start > '{} sec'::interval "
+                 " and now() - query_start > '{0} sec'::interval "
                  " and query ilike 'select%'").format(limit)
     cur.execute(query)
     for row in cur.fetchall():
